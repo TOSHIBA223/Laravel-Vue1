@@ -1,0 +1,102 @@
+<?php
+namespace App\Http\Controllers\Admin\Pages\Roles\AssignRole;
+
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use App\Http\Controllers\Admin\AdminController;
+use App\Models\Menu;
+use App\Models\SMSTemplate as SmsTemplateModel;
+use App\Builders\ContentTags;
+use App\Models\Roles;
+
+class AssignRole extends AdminController
+{
+
+    /**
+     * Scope this function get sms template and set data.
+     *
+    */
+
+    public function index()
+    { dd("sdfds");
+        $roleName = Roles::get();
+        dd($roleName);
+    }
+
+    /**
+     * Scope this function get sms template.
+     *
+    */
+
+    public function get()
+    {
+        $this->data['templates'] = SmsTemplateModel::withTrashed()->get();
+        return back()->with(['data' => $this->data]);
+    }
+
+    /**
+     * Scope this function create sms template.
+     *
+    */
+
+    public function create(Request $r)
+    {
+        unset($r['id']);
+
+        try {
+            SmsTemplateModel::create($r->all());
+            $this->data['templates'] = SmsTemplateModel::withTrashed()->get();
+
+            return back()->with(['systemSuccess' => 'New template added successfully', 'data' => $this->data]);
+
+        } catch( \Exception $e) {
+            return back()->withErrors(['systemFail' => 'Something went wrong on the server. Please try again.' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Scope this function update sms template.
+     *
+    */
+    public function update(Request $r)
+    {
+        if( $r->enable ) {
+            try {
+                SmsTemplateModel::onlyTrashed()->where('id', $r->id)->restore();
+
+                $this->data['templates'] = SmsTemplateModel::withTrashed()->get();
+
+                return back()->with(['systemSuccess' => 'Template enabled successfully', 'data' => $this->data]);
+            } catch( \Exception $e) {
+                return back()->withErrors(['systemFail' => 'We couldn\'t enable this template. Please try again.']);
+            }
+        }
+
+        try {
+            SmsTemplateModel::find($r->id)->update($r->all());
+
+            $this->data['templates'] = SmsTemplateModel::withTrashed()->get();
+
+            return back()->with(['systemSuccess' => 'Template updated successfully', 'data' => $this->data]);
+
+        } catch( \Exception $e) {
+            return back()->withErrors(['systemFail' => 'We couldn\'t update this template. Please try again.']);
+        }
+    }
+
+    /**
+     * Scope this function create sms template.
+     *
+    */
+    public function delete($id)
+    {
+        try{
+            SmsTemplateModel::withTrashed()->find($id)->delete();
+            $this->data['templates'] = SmsTemplateModel::withTrashed()->get();
+
+            return back()->with(['systemSuccess' => 'Template deleted successfully', 'data' => $this->data]);
+        } catch( \Exception $e) {
+            return back()->withErrors(['systemFail' => 'Something went wrong on the server. Please try again.']);
+        }
+    }
+}

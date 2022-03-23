@@ -1,0 +1,4 @@
+﻿Hand scan,Employee ID,Surname,Given Names,Birth Date,Street Address,Suburb,State,Post Code,Mobile No.,Email,Employer Status
+301,5555,Test1,Sunshine1,1/01/2001,2/36 SOMMERSET DRIVE,SUNSHINE NORTH,VIC,3020,0439 028 028,,ALC PRODUCTION
+11,6666,test2,sunshine2,1/01/2002,1 tristania drive ,colac,vic,3250,,,SUNSHINEEEE
+11,,test2,sunshine2,1/01/2002,1 tristania drive ,colac,vic,3250,439028028,,SUNSHINEEEE
